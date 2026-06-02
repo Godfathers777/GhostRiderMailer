@@ -8,11 +8,7 @@ const PORT = process.env.PORT || 3000;
 
 /* ── CORS ── */
 app.use(cors({
-  origin: [
-    process.env.ALLOWED_ORIGIN,
-    'http://localhost',
-    'http://127.0.0.1',
-  ],
+  origin: '*',
   methods: ['POST', 'GET'],
 }));
 
@@ -36,7 +32,6 @@ app.get('/', (req, res) => {
 app.post('/send', async (req, res) => {
   const { sender_name, sender_initials, from_email, to_email, subject, html } = req.body;
 
-  /* Validate required fields */
   if (!sender_name || !from_email || !to_email || !subject || !html) {
     return res.status(400).json({
       ok: false,
@@ -44,7 +39,6 @@ app.post('/send', async (req, res) => {
     });
   }
 
-  /* Basic email validation */
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(from_email) || !emailRegex.test(to_email)) {
     return res.status(400).json({ ok: false, error: 'Invalid email address.' });
